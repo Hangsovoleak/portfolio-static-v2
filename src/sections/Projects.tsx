@@ -1,7 +1,17 @@
 /**
  * Description:
- *      Project showcase section with category filtering.
- *      Displays a grid of ProjectCard components based on selected tags.
+ *      Building Blocks Projects section component.
+ *      Supports 2 view modes:
+ *      1. Landing Section View: Displays header, 6 top projects, and a "View More Projects" button.
+ *      2. Dedicated All Projects Page View: Styled precisely after the uploaded reference image:
+ *         - "← Back to landing" top button.
+ *         - Green tag ("✦ THE PLATFORM PILLARS").
+ *         - Large headline ("The building blocks of digital portfolio projects.").
+ *         - Subtitle description paragraph.
+ *         - 4 Metric Stat Cards (8 BUILDING BLOCKS, 25+ SUB-FUNCTIONS, 10+ TECH STACKS, 8 REPOSITORIES).
+ *         - Horizontal Pillar Sub-Navigation Breadcrumb Links (01 AUTH → 02 WEATHER → ...).
+ *         - Search & Tech Filter navigation.
+ *         - 3-column grid of ALL 8 Project Cards.
  */
 
 /*------------------------------------------------------------------------------
@@ -9,23 +19,33 @@
 ------------------------------------------------------------------------------*/
 import { useMemo, useState } from "react";
 import ProjectCard from "../components/ProjectCard";
-import { FolderGit2 } from "lucide-react";
+import { projectsData } from "../data/projects";
+import { ArrowLeft, ArrowRight, Sparkles, Search } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 /*------------------------------------------------------------------------------
                             MAIN COMPONENT DEFINITION
 ------------------------------------------------------------------------------*/
+function ProjectsSection({ projects = [] }: { projects?: any[] }) {
+    const { isDark } = useTheme();
 
-function ProjectsSection({ projects = [] }) {
-    // State management for active category filter
+    // Fallback to rich projectsData if items passed are empty or basic
+    const projectList = projects && projects.length > 0 ? projects : projectsData;
+
+    // View state: false = main section (6 projects), true = full dedicated page view (all 8 projects)
+    const [isFullPageView, setIsFullPageView] = useState(false);
+
+    // Filter and search state
     const [activeFilter, setActiveFilter] = useState("All");
+    const [searchQuery, setSearchQuery] = useState("");
 
-    // Derive available filters from project tags/tech so it stays in-sync with data
+    // Derive available filters from project tags/tech
     const availableFilters = useMemo(() => {
         const uniqueTags = new Set<string>();
 
-        projects.forEach((project) => {
+        projectList.forEach((project) => {
             const tags = project.tags || project.tech || [];
-            tags.forEach((tag) => {
+            tags.forEach((tag: string) => {
                 if (typeof tag === "string") {
                     uniqueTags.add(tag.trim());
                 }
@@ -33,66 +53,281 @@ function ProjectsSection({ projects = [] }) {
         });
 
         return ["All", ...Array.from(uniqueTags).sort()];
-    }, [projects]);
+    }, [projectList]);
 
-    // Memoized filtering logic
-    const filteredProjects = useMemo(() => {
-        if (activeFilter === "All") return projects;
+    // Filtered project list for main section (Max 6)
+    const landingProjects = useMemo(() => {
+        let filtered = projectList;
 
-        const filterKey = activeFilter.toLowerCase();
-        return projects.filter((project) => {
-            const tags = project.tags || project.tech || [];
-            return tags.some(
-                (tag) => typeof tag === "string" && tag.toLowerCase() === filterKey
-            );
+        if (activeFilter !== "All") {
+            const filterKey = activeFilter.toLowerCase();
+            filtered = projectList.filter((project) => {
+                const tags = project.tags || project.tech || [];
+                return tags.some(
+                    (tag: string) => typeof tag === "string" && tag.toLowerCase() === filterKey
+                );
+            });
+        }
+
+        return filtered.slice(0, 6);
+    }, [projectList, activeFilter]);
+
+    // Filtered project list for FULL PAGE view (All Projects)
+    const allPageProjects = useMemo(() => {
+        return projectList.filter((project) => {
+            const matchesFilter =
+                activeFilter === "All" ||
+                (project.tags || []).some(
+                    (tag: string) => tag.toLowerCase() === activeFilter.toLowerCase()
+                );
+
+            const searchLower = searchQuery.toLowerCase().trim();
+            const matchesSearch =
+                !searchLower ||
+                project.title.toLowerCase().includes(searchLower) ||
+                project.description.toLowerCase().includes(searchLower) ||
+                (project.tags || []).some((tag: string) => tag.toLowerCase().includes(searchLower));
+
+            return matchesFilter && matchesSearch;
         });
-    }, [projects, activeFilter]);
+    }, [projectList, activeFilter, searchQuery]);
 
+    // Handler to open full page view and scroll top
+    const handleOpenFullPage = () => {
+        setIsFullPageView(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    // Handler to return to landing view
+    const handleBackToLanding = () => {
+        setIsFullPageView(false);
+        setTimeout(() => {
+            const projElem = document.getElementById("projects");
+            if (projElem) {
+                projElem.scrollIntoView({ behavior: "smooth" });
+            }
+        }, 100);
+    };
+
+    /*--------------------------------------------------------------------------*/
+    /* DEDICATED ALL PROJECTS PAGE VIEW (Matching Reference Image)              */
+    /*--------------------------------------------------------------------------*/
+    /*--------------------------------------------------------------------------*/
+    /* DEDICATED ALL PROJECTS PAGE VIEW (Matching Reference Image)              */
+    /*--------------------------------------------------------------------------*/
+    if (isFullPageView) {
+        return (
+            <div id="all-projects-page" className={`fixed inset-0 z-50 overflow-y-auto py-12 transition-colors duration-300 ${
+                isDark ? "bg-[#080C16] text-slate-100" : "bg-slate-50 text-slate-900"
+            }`}>
+                <div className="portfolio-animate relative mx-auto max-w-7xl px-6">
+
+                    {/* Top Button: ← Back to landing */}
+                    <div>
+                        <button
+                            onClick={handleBackToLanding}
+                            className={`group inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-bold shadow-sm transition ${
+                                isDark
+                                    ? "border-slate-700 bg-slate-900 text-slate-200 hover:border-[#0D9668] hover:text-[#0D9668]"
+                                    : "border-slate-300 bg-white text-slate-800 hover:border-[#0D9668] hover:text-[#0D9668]"
+                            }`}
+                        >
+                            <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1" />
+                            <span>Back to landing</span>
+                        </button>
+                    </div>
+
+                    {/* Page Branding Tag: ✦ THE PLATFORM PILLARS */}
+                    <div className="mt-8 flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-[#0D9668]">
+                        <Sparkles size={14} />
+                        THE PORTFOLIO PILLARS
+                    </div>
+
+                    {/* Large Page Headline */}
+                    <h1 className={`mt-3 max-w-3xl text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl ${
+                        isDark ? "text-white" : "text-slate-900"
+                    }`}>
+                        The <span className="text-[#0D9668]">building blocks</span> of digital portfolio projects.
+                    </h1>
+
+                    {/* Page Subtitle Description */}
+                    <p className={`mt-4 max-w-3xl text-sm font-medium leading-7 sm:text-base ${
+                        isDark ? "text-slate-400" : "text-slate-600"
+                    }`}>
+                        From full-stack web applications, weather REST APIs, and authentication services to graph data structure navigation systems — these eight pillars describe the full software engineering capabilities built throughout my journey. Open any one to explore the repository and live demo links inside it.
+                    </p>
+
+                    {/* Stat Cards Row (4 Pill Stat Cards) */}
+                    <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl">
+                        <div className={`rounded-2xl border p-4 shadow-xs ${isDark ? "border-slate-800/80 bg-[#0D1424]" : "border-slate-200 bg-white"}`}>
+                            <div className="text-2xl sm:text-3xl font-black text-[#0D9668]">8</div>
+                            <div className={`mt-1 text-[10px] font-extrabold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-500"}`}>BUILDING BLOCKS</div>
+                        </div>
+                        <div className={`rounded-2xl border p-4 shadow-xs ${isDark ? "border-slate-800/80 bg-[#0D1424]" : "border-slate-200 bg-white"}`}>
+                            <div className="text-2xl sm:text-3xl font-black text-[#0D9668]">25+</div>
+                            <div className={`mt-1 text-[10px] font-extrabold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-500"}`}>SUB-FUNCTIONS</div>
+                        </div>
+                        <div className={`rounded-2xl border p-4 shadow-xs ${isDark ? "border-slate-800/80 bg-[#0D1424]" : "border-slate-200 bg-white"}`}>
+                            <div className="text-2xl sm:text-3xl font-black text-[#0D9668]">10+</div>
+                            <div className={`mt-1 text-[10px] font-extrabold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-500"}`}>TECH STACKS</div>
+                        </div>
+                        <div className={`rounded-2xl border p-4 shadow-xs ${isDark ? "border-slate-800/80 bg-[#0D1424]" : "border-slate-200 bg-white"}`}>
+                            <div className="text-2xl sm:text-3xl font-black text-[#0D9668]">8</div>
+                            <div className={`mt-1 text-[10px] font-extrabold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-500"}`}>REPOSITORIES COVERED</div>
+                        </div>
+                    </div>
+
+                    {/* Horizontal Pillar Breadcrumb Sub-Navigation */}
+                    <div className={`mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-black uppercase tracking-wider border-t border-b py-3 ${
+                        isDark ? "border-slate-800 text-slate-400" : "border-slate-200 text-slate-600"
+                    }`}>
+                        {projectList.map((p, pIdx) => (
+                            <div key={p.id} className="flex items-center gap-2">
+                                <a
+                                    href={`#pillar-${p.step || pIdx + 1}`}
+                                    className="hover:text-[#0D9668] transition-colors"
+                                >
+                                    <span className="text-[#0D9668]">0{pIdx + 1}</span> {p.title.split(" ")[0]}
+                                </a>
+                                {pIdx < projectList.length - 1 && <span className={isDark ? "text-slate-600" : "text-slate-400"}>→</span>}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Search Bar & Tech Filter Controls */}
+                    <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        {/* Filter Tags */}
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span className={`text-xs font-extrabold uppercase tracking-wider mr-1 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                                Tech:
+                            </span>
+                            {availableFilters.map((label) => (
+                                <button
+                                    key={label}
+                                    onClick={() => setActiveFilter(label)}
+                                    className={
+                                        label === activeFilter
+                                            ? "rounded-full bg-[#0D9668] px-4 py-1.5 text-xs font-extrabold uppercase tracking-wide text-white shadow-xs"
+                                            : isDark
+                                                ? "rounded-full border border-slate-700 bg-slate-900 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-slate-300 hover:border-[#0D9668] hover:text-[#0D9668]"
+                                                : "rounded-full border border-slate-300 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-slate-700 hover:border-[#0D9668] hover:text-[#0D9668]"
+                                    }
+                                >
+                                    {label}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Search Input */}
+                        <div className="relative w-full sm:w-72">
+                            <Search size={16} className={`absolute left-3.5 top-1/2 -translate-y-1/2 ${isDark ? "text-slate-500" : "text-slate-400"}`} />
+                            <input
+                                type="text"
+                                placeholder="Search all projects..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className={`w-full rounded-full border py-2 pl-10 pr-4 text-xs font-medium focus:border-[#0D9668] focus:outline-none shadow-xs ${
+                                    isDark
+                                        ? "border-slate-700 bg-slate-900 text-slate-100 placeholder-slate-500"
+                                        : "border-slate-300 bg-white text-slate-900 placeholder-slate-400"
+                                }`}
+                            />
+                        </div>
+                    </div>
+
+                    {/* All Projects Grid (All 8 Projects) */}
+                    {allPageProjects.length === 0 ? (
+                        <div className={`mt-12 rounded-2xl border border-dashed p-12 text-center text-sm font-medium ${
+                            isDark ? "border-slate-800 text-slate-400" : "border-slate-300 text-slate-600"
+                        }`}>
+                            No projects found matching your search.
+                        </div>
+                    ) : (
+                        <div className="mt-10 grid gap-6 md:grid-cols-3 lg:gap-8 items-stretch">
+                            {allPageProjects.map((project: any, index: number) => (
+                                <div key={project.id || project.title} id={`pillar-${project.step || index + 1}`}>
+                                    <ProjectCard
+                                        project={project}
+                                        index={index}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                </div>
+            </div>
+        );
+    }
+
+    /*--------------------------------------------------------------------------*/
+    /* MAIN LANDING SECTION VIEW (Max 6 Projects)                                */
+    /*--------------------------------------------------------------------------*/
     return (
-        <section id="projects" className="border-b border-cyan-100 bg-slate-950 py-20 text-white">
+        <section
+            id="projects"
+            className={`border-b py-20 transition-colors duration-300 ${
+                isDark ? "border-slate-800/80 bg-[#080C16] text-slate-100" : "border-slate-200 bg-white text-slate-900"
+            }`}
+        >
             <div className="portfolio-animate relative mx-auto max-w-7xl px-6">
 
-                {/* Section Title and Badge */}
-                <div className="mx-auto max-w-3xl text-center">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-rose-300/40 bg-rose-400/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-rose-200">
-                        <FolderGit2 size={14} />
-                        Projects
+                {/* Section Header */}
+                <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+                    <div>
+                        <div className="flex items-center gap-2.5 text-xs font-black uppercase tracking-[0.18em] text-[#0D9668]">
+                            <span className="h-0.5 w-6 rounded-full bg-[#0D9668]" />
+                            BUILDING BLOCKS
+                        </div>
+
+                        <h2 className={`mt-3 text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl ${
+                            isDark ? "text-white" : "text-slate-900"
+                        }`}>
+                            <span className="text-[#0D9668]">Building Blocks</span> of <br className="hidden sm:inline" />
+                            Portfolio Software Projects
+                        </h2>
                     </div>
-                    <h2 className="mt-4 text-3xl font-black sm:text-4xl">Project Builds</h2>
+
+                    <p className={`max-w-md text-sm font-medium leading-6 md:text-right ${
+                        isDark ? "text-slate-400" : "text-slate-600"
+                    }`}>
+                        Key software applications, platforms, weather REST APIs, and data structure systems engineered using modern frameworks and client requirements.
+                    </p>
                 </div>
 
-                {/* Filter Navigation */}
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
-                    {availableFilters.map((label) => (
-                        <button
-                            key={label}
-                            onClick={() => setActiveFilter(label)}
-                            className={
-                                label === activeFilter
-                                    ? "rounded-full border border-white/30 bg-white px-4 py-2 text-xs font-bold uppercase tracking-wide text-slate-900"
-                                    : "rounded-full border border-white/20 px-4 py-2 text-xs font-bold uppercase tracking-wide text-slate-200 hover:bg-white/10"
-                            }
-                        >
-                            {label}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Project Grid */}
-                {filteredProjects.length === 0 ? (
-                    <div className="mt-10 text-center text-sm font-medium text-slate-200">
+                {/* Main Project Grid: Display ONLY 6 projects on website */}
+                {landingProjects.length === 0 ? (
+                    <div className={`mt-12 rounded-2xl border border-dashed p-12 text-center text-sm font-medium ${
+                        isDark ? "border-slate-800 text-slate-400" : "border-slate-300 text-slate-600"
+                    }`}>
                         No projects match this filter. Try selecting a different category.
                     </div>
                 ) : (
-                    <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                        {filteredProjects.map((project) => (
+                    <div className="mt-10 grid gap-6 md:grid-cols-3 lg:gap-8 items-stretch">
+                        {landingProjects.map((project: any, index: number) => (
                             <ProjectCard
                                 key={project.id || project.title}
                                 project={project}
+                                index={index}
                             />
                         ))}
                     </div>
                 )}
+
+                {/* View More Projects Action Button -> Opens Full Page View */}
+                <div className="mt-8 flex justify-center text-center">
+                    <button
+                        onClick={handleOpenFullPage}
+                        className={`group inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-xs font-extrabold uppercase tracking-wider shadow-xs transition ${
+                            isDark
+                                ? "border-[#0D9668]/50 bg-slate-900 text-[#0D9668] hover:bg-[#0D9668] hover:text-white"
+                                : "border-[#0D9668]/40 bg-white text-[#0D9668] hover:bg-[#0D9668] hover:text-white"
+                        }`}
+                    >
+                        <span>View More Projects ({projectList.length})</span>
+                        <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+                    </button>
+                </div>
             </div>
         </section>
     );
