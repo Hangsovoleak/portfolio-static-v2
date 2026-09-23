@@ -296,17 +296,10 @@ function ResourcesSection() {
                         <h2 className={`mt-3 text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl ${
                             isDark ? "text-white" : "text-slate-900"
                         }`}>
-                            Everything I have learned & built, <br className="hidden sm:inline" />
+                            Everything I have learned & built <br className="hidden sm:inline" />
                             <span className="text-[#0D9668]">end to end</span>
                         </h2>
                     </div>
-
-                    {/* Right Side Subtitle */}
-                    <p className={`max-w-md text-sm font-medium leading-6 md:text-right ${
-                        isDark ? "text-slate-400" : "text-slate-600"
-                    }`}>
-                        Academic coursework, computer science foundations, engineering tools, and professional skills developed through university, diploma programs, and hands-on experience.
-                    </p>
                 </div>
             </div>
 
@@ -330,13 +323,6 @@ function ResourcesSection() {
                         ))}
                     </div>
                 </div>
-            </div>
-
-            {/* Bottom Caption (Exact match to reference image bottom text) */}
-            <div className={`mt-8 text-center text-xs font-bold uppercase tracking-wider ${
-                isDark ? "text-slate-500" : "text-slate-600"
-            }`}>
-                Hover to pause — click any capability to explore details
             </div>
         </section>
     );

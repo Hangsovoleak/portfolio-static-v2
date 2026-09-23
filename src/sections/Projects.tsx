@@ -147,35 +147,8 @@ function ProjectsSection({ projects = [] }: { projects?: any[] }) {
                     <h1 className={`mt-3 max-w-3xl text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl ${
                         isDark ? "text-white" : "text-slate-900"
                     }`}>
-                        The <span className="text-[#0D9668]">building blocks</span> of digital portfolio projects.
+                        The <span className="text-[#0D9668]">building blocks</span> of digital projects.
                     </h1>
-
-                    {/* Page Subtitle Description */}
-                    <p className={`mt-4 max-w-3xl text-sm font-medium leading-7 sm:text-base ${
-                        isDark ? "text-slate-400" : "text-slate-600"
-                    }`}>
-                        From full-stack web applications, weather REST APIs, and authentication services to graph data structure navigation systems — these eight pillars describe the full software engineering capabilities built throughout my journey. Open any one to explore the repository and live demo links inside it.
-                    </p>
-
-                    {/* Stat Cards Row (4 Pill Stat Cards) */}
-                    <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl">
-                        <div className={`rounded-2xl border p-4 shadow-xs ${isDark ? "border-slate-800/80 bg-[#0D1424]" : "border-slate-200 bg-white"}`}>
-                            <div className="text-2xl sm:text-3xl font-black text-[#0D9668]">8</div>
-                            <div className={`mt-1 text-[10px] font-extrabold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-500"}`}>BUILDING BLOCKS</div>
-                        </div>
-                        <div className={`rounded-2xl border p-4 shadow-xs ${isDark ? "border-slate-800/80 bg-[#0D1424]" : "border-slate-200 bg-white"}`}>
-                            <div className="text-2xl sm:text-3xl font-black text-[#0D9668]">25+</div>
-                            <div className={`mt-1 text-[10px] font-extrabold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-500"}`}>SUB-FUNCTIONS</div>
-                        </div>
-                        <div className={`rounded-2xl border p-4 shadow-xs ${isDark ? "border-slate-800/80 bg-[#0D1424]" : "border-slate-200 bg-white"}`}>
-                            <div className="text-2xl sm:text-3xl font-black text-[#0D9668]">10+</div>
-                            <div className={`mt-1 text-[10px] font-extrabold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-500"}`}>TECH STACKS</div>
-                        </div>
-                        <div className={`rounded-2xl border p-4 shadow-xs ${isDark ? "border-slate-800/80 bg-[#0D1424]" : "border-slate-200 bg-white"}`}>
-                            <div className="text-2xl sm:text-3xl font-black text-[#0D9668]">8</div>
-                            <div className={`mt-1 text-[10px] font-extrabold uppercase tracking-wider ${isDark ? "text-slate-400" : "text-slate-500"}`}>REPOSITORIES COVERED</div>
-                        </div>
-                    </div>
 
                     {/* Horizontal Pillar Breadcrumb Sub-Navigation */}
                     <div className={`mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-black uppercase tracking-wider border-t border-b py-3 ${
@@ -196,27 +169,6 @@ function ProjectsSection({ projects = [] }: { projects?: any[] }) {
 
                     {/* Search Bar & Tech Filter Controls */}
                     <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                        {/* Filter Tags */}
-                        <div className="flex flex-wrap items-center gap-2">
-                            <span className={`text-xs font-extrabold uppercase tracking-wider mr-1 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
-                                Tech:
-                            </span>
-                            {availableFilters.map((label) => (
-                                <button
-                                    key={label}
-                                    onClick={() => setActiveFilter(label)}
-                                    className={
-                                        label === activeFilter
-                                            ? "rounded-full bg-[#0D9668] px-4 py-1.5 text-xs font-extrabold uppercase tracking-wide text-white shadow-xs"
-                                            : isDark
-                                                ? "rounded-full border border-slate-700 bg-slate-900 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-slate-300 hover:border-[#0D9668] hover:text-[#0D9668]"
-                                                : "rounded-full border border-slate-300 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-slate-700 hover:border-[#0D9668] hover:text-[#0D9668]"
-                                    }
-                                >
-                                    {label}
-                                </button>
-                            ))}
-                        </div>
 
                         {/* Search Input */}
                         <div className="relative w-full sm:w-72">
@@ -324,7 +276,7 @@ function ProjectsSection({ projects = [] }: { projects?: any[] }) {
                                 : "border-[#0D9668]/40 bg-white text-[#0D9668] hover:bg-[#0D9668] hover:text-white"
                         }`}
                     >
-                        <span>View More Projects ({projectList.length})</span>
+                        <span>View More Projects</span>
                         <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
                     </button>
                 </div>

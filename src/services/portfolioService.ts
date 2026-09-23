@@ -11,7 +11,7 @@ export const fetchPortfolioData = async () => {
             {
                 id: 1,
                 step: "01",
-                category: "01 / DEGREE",
+                category: "GPA 3.70",
                 institution: "Royal University of Phnom Penh",
                 degree: "Bachelor of Information Technology Engineering",
                 period: "2025 - Present",
@@ -20,7 +20,7 @@ export const fetchPortfolioData = async () => {
             {
                 id: 2,
                 step: "02",
-                category: "02 / DIPLOMA",
+                category: "GPT 2.77",
                 institution: "Tux Global Institute",
                 degree: "Associate Degree in App/Web Development",
                 period: "2025 - Present",

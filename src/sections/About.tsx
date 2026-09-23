@@ -81,10 +81,7 @@ function AboutSection({ profile }) {
 
                         {/* Personal Description */}
                         <p className={`mt-6 max-w-3xl text-base font-medium leading-8 sm:text-lg ${isDark ? "text-slate-300" : "text-[#09090B]/80"}`}>
-                            I am an Information Technology Engineering student specializing in software development.
-                            Experienced in building web applications using modern frontend and backend technologies.
-                            Strong foundation in programming, system troubleshooting, and problem solving. Eager to
-                            contribute technical skills while continuing to grow.
+                            Information Technology Engineering student focused on Python backend development and DevOps. I have hands-on experience building web applications with Django and FastAPI, working with PostgreSQL and MySQL, and using Git and GitHub for version control. I also have experience with JavaScript, React, and Tailwind CSS, giving me a good understanding of how frontend and backend systems work together.
                         </p>
 
                         {/* Call to Actions */}

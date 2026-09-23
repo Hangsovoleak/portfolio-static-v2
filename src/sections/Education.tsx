@@ -18,7 +18,7 @@ import { useTheme } from "../context/ThemeContext";
 ------------------------------------------------------------------------------*/
 const SCHOOL_LOGOS: Record<string, string> = {
     "Royal University of Phnom Penh": "/images/rupp-logo.png",
-    "Tux Global Institute": "/images/tux-logo.png",
+    "TUX Global Institute": "/images/tux-logo.png",
 };
 
 /*------------------------------------------------------------------------------
@@ -49,10 +49,6 @@ function EducationSection({ items = [] }: { items?: any[] }) {
                     </h2>
 
                     <div className={`mx-auto mt-3 h-0.5 w-12 rounded-full ${isDark ? "bg-slate-800" : "bg-slate-300"}`} />
-
-                    <p className={`mx-auto mt-4 max-w-2xl text-center text-sm font-medium leading-6 sm:text-base ${isDark ? "text-slate-400" : "text-slate-600"}`}>
-                        Key educational milestones and practical qualifications shaping my engineering foundation.
-                    </p>
                 </div>
 
                 {/* Stepper Timeline & Cards Grid */}
@@ -106,7 +102,7 @@ function EducationSection({ items = [] }: { items?: any[] }) {
                                             className={
                                                 isGreen
                                                     ? "inline-block rounded-full border border-[#0D9668]/30 bg-[#0D9668]/10 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-[#0D9668]"
-                                                    : "inline-block rounded-full border border-[#2C3F96]/40 bg-[#2C3F96]/10 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-[#2C3F96] dark:text-[#818CF8]"
+                                                    : "inline-block rounded-full border border-[#2C3F96]/40 bg-[#2C3F96]/10 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-[#2C3F96] dark:text-[#2C3F96]"
                                             }
                                         >
                                             {entry.category || `${stepNumber} / EDUCATION`}
@@ -123,7 +119,7 @@ function EducationSection({ items = [] }: { items?: any[] }) {
                                         className={
                                             isGreen
                                                 ? "mt-2 text-sm font-bold leading-6 text-[#0D9668]"
-                                                : "mt-2 text-sm font-bold leading-6 text-[#2C3F96] dark:text-[#818CF8]"
+                                                : "mt-2 text-sm font-bold leading-6 text-[#2C3F96] dark:text-[#2C3F96]"
                                         }
                                     >
                                         {entry.degree}

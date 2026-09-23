@@ -64,7 +64,7 @@ const DEFAULT_EXPERIENCE_ITEMS = [
         company: "E-Robot",
         period: "March 2026 – June 2026",
         months: ["Mar 2026", "Apr 2026", "May 2026", "Jun 2026"],
-        technologies: ["Scratch", "Teaching & Mentoring", "Lab Prep", "Classroom Management"],
+        technologies: ["Scratch", "Teaching & Mentoring", "Lab", "Classroom Management"],
         bullets: [
             "Supported Scratch programming classes by adapting teaching slides and preparing computer labs for student practice.",
             "Guided students in building their own Scratch projects, explained programming concepts in a simple and clear way, and helped students troubleshoot problems during practice.",
@@ -114,7 +114,7 @@ function StandaloneTimelineIcon({ entry, isGreen }: { entry: any; isGreen: boole
                         href="/assets/certificate.png"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-3 inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-[#2C3F96] dark:text-[#818CF8] hover:underline"
+                        className="mt-3 inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-[#2C3F96] dark:text-[#2C3F96] hover:underline"
                     >
                         <span>✦ Certificate Preview ↗</span>
                     </a>
@@ -173,52 +173,18 @@ function ExperienceSection({ items = [] }: { items?: any[] }) {
                 <div className="mx-auto max-w-3xl text-center">
                     <div className="inline-flex items-center gap-2 rounded-full border border-[#0D9668]/30 bg-[#0D9668]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-[#0D9668]">
                         <Flame size={14} />
-                        EXPERIENCE TIMELINE
+                        EXPERIENCE
                     </div>
 
                     <h2 className={`mt-4 text-3xl font-black sm:text-5xl tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}>
-                        Step by step. <span className="text-[#0D9668]">Month by month.</span>
+                        Step  <span className="text-[#0D9668]">by step.</span>
                     </h2>
 
                     <div className={`mx-auto mt-3 h-0.5 w-12 rounded-full ${isDark ? "bg-slate-800" : "bg-slate-300"}`} />
 
                     <p className={`mx-auto mt-4 max-w-2xl text-center text-sm font-medium leading-6 sm:text-base ${isDark ? "text-slate-400" : "text-slate-600"}`}>
-                        A detailed timeline of my volunteer programs and frontend engineering internship.
+                        A detailed timeline of my volunteer programs and internship.
                     </p>
-
-                    {/* Filter Tabs */}
-                    <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
-                        <button
-                            onClick={() => setFilter("ALL")}
-                            className={`rounded-full px-4 py-1.5 text-xs font-extrabold uppercase tracking-wider transition ${
-                                filter === "ALL"
-                                    ? isDark ? "bg-slate-100 text-[#080C16] shadow-md" : "bg-slate-900 text-white shadow-md"
-                                    : isDark ? "border border-slate-700 bg-slate-900/80 text-slate-300 hover:border-slate-400 hover:text-white" : "border border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:text-slate-900"
-                            }`}
-                        >
-                            All Roles ({rawList.length})
-                        </button>
-                        <button
-                            onClick={() => setFilter("VOLUNTEER")}
-                            className={`rounded-full px-4 py-1.5 text-xs font-extrabold uppercase tracking-wider transition ${
-                                filter === "VOLUNTEER"
-                                    ? "bg-[#2C3F96] text-white shadow-md"
-                                    : isDark ? "border border-slate-700 bg-slate-900/80 text-slate-300 hover:border-[#2C3F96] hover:text-[#818CF8]" : "border border-slate-300 bg-white text-slate-700 hover:border-[#2C3F96] hover:text-[#2C3F96]"
-                            }`}
-                        >
-                            Volunteer (2)
-                        </button>
-                        <button
-                            onClick={() => setFilter("INTERNSHIP")}
-                            className={`rounded-full px-4 py-1.5 text-xs font-extrabold uppercase tracking-wider transition ${
-                                filter === "INTERNSHIP"
-                                    ? "bg-[#0D9668] text-white shadow-md"
-                                    : isDark ? "border border-slate-700 bg-slate-900/80 text-slate-300 hover:border-[#0D9668] hover:text-[#0D9668]" : "border border-slate-300 bg-white text-slate-700 hover:border-[#0D9668] hover:text-[#0D9668]"
-                            }`}
-                        >
-                            Internship (1)
-                        </button>
-                    </div>
                 </div>
 
                 {/* Vertical Timeline & Stepper Layout */}
@@ -268,7 +234,7 @@ function ExperienceSection({ items = [] }: { items?: any[] }) {
                                              className={
                                                  isGreen
                                                      ? "inline-block rounded-full border border-[#0D9668]/40 bg-[#0D9668]/15 px-3 py-1 text-xs font-black uppercase tracking-wider text-[#0D9668]"
-                                                     : "inline-block rounded-full border border-[#2C3F96]/40 bg-[#2C3F96]/15 px-3 py-1 text-xs font-black uppercase tracking-wider text-[#2C3F96] dark:text-[#818CF8]"
+                                                     : "inline-block rounded-full border border-[#2C3F96]/40 bg-[#2C3F96]/15 px-3 py-1 text-xs font-black uppercase tracking-wider text-[#2C3F96] dark:text-[#2C3F96]"
                                              }
                                          >
                                              {entry.category || `${stepNumber} / EXPERIENCE`}
@@ -284,7 +250,7 @@ function ExperienceSection({ items = [] }: { items?: any[] }) {
                                      <div className="mt-2 flex flex-wrap items-center gap-2.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-400">
                                          <span className={`font-black text-sm sm:text-base ${isDark ? "text-slate-200" : "text-slate-800"}`}>{entry.company}</span>
                                          <span className="text-slate-500">•</span>
-                                         <span className={`flex items-center gap-1.5 font-extrabold ${isGreen ? "text-[#0D9668]" : "text-[#2C3F96] dark:text-[#818CF8]"}`}>
+                                         <span className={`flex items-center gap-1.5 font-extrabold ${isGreen ? "text-[#0D9668]" : "text-[#2C3F96] dark:text-[#2C3F96]"}`}>
                                              <Calendar size={14} />
                                              {entry.period}
                                          </span>
@@ -302,7 +268,7 @@ function ExperienceSection({ items = [] }: { items?: any[] }) {
                                                      className={`rounded-md px-2.5 py-0.5 text-xs font-extrabold ${
                                                          isGreen
                                                              ? "bg-[#0D9668]/15 text-[#0D9668]"
-                                                             : "bg-[#2C3F96]/15 text-[#2C3F96] dark:text-[#818CF8]"
+                                                             : "bg-[#2C3F96]/15 text-[#2C3F96] dark:text-[#2C3F96]"
                                                      }`}
                                                  >
                                                      {month}
@@ -315,7 +281,7 @@ function ExperienceSection({ items = [] }: { items?: any[] }) {
                                      <ul className={`mt-4 space-y-2.5 text-sm sm:text-base font-normal leading-relaxed ${isDark ? "text-slate-300" : "text-slate-600"}`}>
                                          {bulletList.map((bullet, i) => (
                                              <li key={i} className="flex items-start gap-2.5">
-                                                 <CheckCircle2 size={18} className={`mt-1 flex-shrink-0 ${isGreen ? "text-[#0D9668]" : "text-[#2C3F96] dark:text-[#818CF8]"}`} />
+                                                 <CheckCircle2 size={18} className={`mt-1 flex-shrink-0 ${isGreen ? "text-[#0D9668]" : "text-[#2C3F96] dark:text-[#2C3F96]"}`} />
                                                  <span>{bullet}</span>
                                              </li>
                                          ))}
@@ -344,7 +310,7 @@ function ExperienceSection({ items = [] }: { items?: any[] }) {
                                                  href="/assets/certificate.png"
                                                  target="_blank"
                                                  rel="noopener noreferrer"
-                                                 className="inline-flex items-center gap-2 rounded-lg border border-[#2C3F96]/40 bg-[#2C3F96]/10 px-4 py-2 text-xs sm:text-sm font-bold text-[#2C3F96] dark:text-[#818CF8] shadow-xs transition hover:bg-[#2C3F96] hover:text-white dark:hover:text-white"
+                                                 className="inline-flex items-center gap-2 rounded-lg border border-[#2C3F96]/40 bg-[#2C3F96]/10 px-4 py-2 text-xs sm:text-sm font-bold text-[#2C3F96] dark:text-[#2C3F96] shadow-xs transition hover:bg-[#2C3F96] hover:text-white dark:hover:text-white"
                                              >
                                                  <ExternalLink size={15} />
                                                  View Certificate ↗
@@ -371,7 +337,7 @@ function ExperienceSection({ items = [] }: { items?: any[] }) {
                                                  href={entry.links.figma}
                                                  target="_blank"
                                                  rel="noopener noreferrer"
-                                                 className="inline-flex items-center gap-2 rounded-lg border border-purple-500/40 bg-purple-950/30 px-4 py-2 text-xs sm:text-sm font-bold text-purple-400 shadow-xs transition hover:border-purple-500 hover:bg-purple-600 hover:text-white"
+                                                 className="inline-flex items-center gap-2 rounded-lg border border-[#2C3F96] bg-[#2C3F96]/10 px-4 py-2 text-xs sm:text-sm font-bold text-[#2C3F96] shadow-xs transition hover:border-[#2C3F96] hover:bg-[#2C3F96] hover:text-white"
                                              >
                                                  <Figma size={15} />
                                                  Figma Design
