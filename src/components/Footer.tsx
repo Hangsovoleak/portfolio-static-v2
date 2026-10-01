@@ -1,230 +1,306 @@
-/**
- * Description:
- *      Multi-column Institutional Footer & Contact component redesigned precisely after the reference layout:
- *      - Left Column: Logo badge, title, subtitle, mission description, contact info (MapPin, Mail, Phone), and "STAY CONNECTED" social icons.
- *      - Middle Column: "PORTFOLIO PROJECTS" list with "EXPLORE ALL PROJECTS ↗" link.
- *      - Right Column: "THE PORTFOLIO STACK" navigation links list.
- *      - Bottom Bar: Copyright and framework technology accreditation.
- */
-
-/*------------------------------------------------------------------------------
-                                   IMPORTS
-------------------------------------------------------------------------------*/
-import { MapPin, Mail, Phone, Github, Linkedin, ExternalLink, Sparkles, Send } from "lucide-react";
-import { projectsData } from "../data/projects";
+import React, { useState } from "react";
+import {
+  Mail,
+  Copy,
+  Check,
+  Send,
+  Github,
+  Linkedin,
+  MapPin,
+  Phone,
+  ArrowUp
+} from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 
-/*------------------------------------------------------------------------------
-                            MAIN COMPONENT DEFINITION
-------------------------------------------------------------------------------*/
-function Footer({ email = "hangsovoleak.dev@gmail.com" }: { email?: string }) {
-    const { isDark } = useTheme();
-    const contactEmail = email || "hangsovoleak.dev@gmail.com";
-
-    return (
-        <footer
-            id="contact"
-            className={`relative z-20 w-full border-t py-8 sm:py-10 transition-colors duration-300 ${
-                isDark ? "border-slate-800/80 bg-[#05080F] text-slate-100" : "border-slate-200 bg-slate-100 text-slate-900"
-            }`}
-        >
-            <div className="portfolio-animate mx-auto max-w-7xl px-6">
-                
-                {/* 3-Column Compact Grid Layout */}
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-12 lg:gap-10 items-start">
-                    
-                    {/* Column 1: Logo, Mission Description, Contact Details & Socials (5 Cols) */}
-                    <div className="md:col-span-6 lg:col-span-5 flex flex-col justify-between">
-                        <div>
-                            {/* Logo & Header Title */}
-                            <div className="flex items-center gap-3">
-                                <div className={`flex h-10 w-10 items-center justify-center rounded-xl border p-1.5 shadow-2xs ${
-                                    isDark ? "border-[#2C3F96]/60 bg-[#0D1424]" : "border-[#2C3F96]/30 bg-white"
-                                }`}>
-                                    <svg className="h-6 w-6 text-[#0D9668]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h3 className={`text-base font-black tracking-tight leading-tight ${isDark ? "text-white" : "text-slate-900"}`}>
-                                        Hang Sovoleak
-                                    </h3>
-                                    <p className={`text-[11px] font-bold ${isDark ? "text-slate-400" : "text-slate-500"}`}>
-                                        Royal University of Phnom Penh · Computer Science
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Short Mission Paragraph */}
-                            <p className={`mt-2.5 text-xs font-medium leading-relaxed max-w-sm line-clamp-2 ${isDark ? "text-slate-400" : "text-slate-600"}`}>
-                                Cambodia's Digital Portfolio Platform—harmonizing web apps, REST APIs, and graph algorithms into a secure ecosystem.
-                            </p>
-
-                            {/* Compact Contact Info List */}
-                            <div className={`mt-3 space-y-1.5 text-xs font-medium ${isDark ? "text-slate-300" : "text-slate-700"}`}>
-                                <div className="flex items-center gap-2">
-                                    <MapPin size={14} className="shrink-0 text-[#0D9668]" />
-                                    <span className="truncate">Phnom Penh, Cambodia · Department of Computer Science</span>
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                    <Mail size={14} className="shrink-0 text-[#0D9668]" />
-                                    <a href={`mailto:${contactEmail}`} className="hover:text-[#0D9668] transition-colors font-semibold truncate">
-                                        {contactEmail}
-                                    </a>
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                    <Phone size={14} className="shrink-0 text-[#0D9668]" />
-                                    <a href="tel:+855964501234" className="hover:text-[#0D9668] transition-colors font-semibold truncate">
-                                        +855 (0) 96 450 1234 / +855 (0) 10 292 822
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Stay Connected Socials */}
-                        <div className={`mt-4 pt-3 border-t flex items-center gap-3 ${isDark ? "border-slate-800/80" : "border-slate-200"}`}>
-                            <span className={`text-[10px] font-black uppercase tracking-widest ${isDark ? "text-slate-500" : "text-slate-400"}`}>
-                                CONNECT:
-                            </span>
-                            <div className="flex items-center gap-2">
-                                <a
-                                    href={`mailto:${contactEmail}`}
-                                    className={`flex h-8 w-8 items-center justify-center rounded-lg border shadow-2xs transition-all hover:border-[#0D9668] hover:bg-[#0D9668] hover:text-white ${
-                                        isDark ? "border-slate-700 bg-slate-900 text-slate-300" : "border-slate-300 bg-white text-slate-700"
-                                    }`}
-                                    title="Email Contact"
-                                >
-                                    <Mail size={14} />
-                                </a>
-                                <a
-                                    href="https://github.com/Hangsovoleak"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className={`flex h-8 w-8 items-center justify-center rounded-lg border shadow-2xs transition-all hover:border-black hover:bg-black hover:text-white ${
-                                        isDark ? "border-slate-700 bg-slate-900 text-slate-300" : "border-slate-300 bg-white text-slate-700"
-                                    }`}
-                                    title="GitHub Profile"
-                                >
-                                    <Github size={14} />
-                                </a>
-                                <a
-                                    href="https://www.linkedin.com/in/hangsovoleak"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className={`flex h-8 w-8 items-center justify-center rounded-lg border shadow-2xs transition-all hover:border-[#0077B5] hover:bg-[#0077B5] hover:text-white ${
-                                        isDark ? "border-slate-700 bg-slate-900 text-slate-300" : "border-slate-300 bg-white text-slate-700"
-                                    }`}
-                                    title="LinkedIn Profile"
-                                >
-                                    <Linkedin size={14} />
-                                </a>
-                                <a
-                                    href="https://t.me/hangsovoleak"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className={`flex h-8 w-8 items-center justify-center rounded-lg border shadow-2xs transition-all hover:border-[#229ED9] hover:bg-[#229ED9] hover:text-white ${
-                                        isDark ? "border-slate-700 bg-slate-900 text-slate-300" : "border-slate-300 bg-white text-slate-700"
-                                    }`}
-                                    title="Telegram"
-                                >
-                                    <Send size={14} />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Column 2: PORTFOLIO PROJECTS Links (4 Cols) */}
-                    <div className="md:col-span-3 lg:col-span-4">
-                        <h4 className={`text-[11px] font-black uppercase tracking-widest mb-2.5 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
-                            PORTFOLIO PROJECTS
-                        </h4>
-
-                        <ul className={`space-y-1.5 text-xs font-medium ${isDark ? "text-slate-300" : "text-slate-700"}`}>
-                            {projectsData.slice(0, 5).map((proj) => (
-                                <li key={proj.id}>
-                                    <a
-                                        href={proj.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="hover:text-[#0D9668] transition-colors leading-tight line-clamp-1 block"
-                                    >
-                                        {proj.title}
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
-
-                        {/* Action Link: EXPLORE ALL PROJECTS ↗ */}
-                        <div className="mt-3">
-                            <a
-                                href="#projects"
-                                className="inline-flex items-center gap-1 text-[11px] font-black uppercase tracking-wider text-[#0D9668] hover:underline"
-                            >
-                                <span>EXPLORE ALL PROJECTS</span>
-                                <ExternalLink size={12} />
-                            </a>
-                        </div>
-                    </div>
-
-                    {/* Column 3: THE PORTFOLIO STACK Navigation (3 Cols) */}
-                    <div className="md:col-span-3 lg:col-span-3">
-                        <h4 className={`text-[11px] font-black uppercase tracking-widest mb-2.5 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
-                            THE PORTFOLIO STACK
-                        </h4>
-
-                        <ul className={`space-y-1.5 text-xs font-medium ${isDark ? "text-slate-300" : "text-slate-700"}`}>
-                            <li>
-                                <a href="#about" className="hover:text-[#0D9668] transition-colors">
-                                    Core Architecture & Bio
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#education" className="hover:text-[#0D9668] transition-colors">
-                                    Educational Background
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#experience" className="hover:text-[#0D9668] transition-colors">
-                                    Volunteer Experience
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#skills" className="hover:text-[#0D9668] transition-colors">
-                                    Technical Skills Ecosystem
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#tools" className="hover:text-[#0D9668] transition-colors">
-                                    Dev Tools & Integrations
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                </div>
-
-                {/* Bottom Bar: Copyright & Accreditation */}
-                <div className={`mt-6 border-t pt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] font-medium ${
-                    isDark ? "border-slate-800/80 text-slate-500" : "border-slate-200 text-[#2C3F96]"
-                }`}>
-                    <div>
-                        © {new Date().getFullYear()} Rorn Hangsovoleak. All rights reserved.
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                        <Sparkles size={12} className="text-[#0D9668]" />
-                        <span>Engineered with React.js, Tailwind CSS & Antigravity.</span>
-                    </div>
-                </div>
-
-            </div>
-        </footer>
-    );
+interface FooterProps {
+  email?: string;
 }
 
-/*------------------------------------------------------------------------------
-                                   EXPORTS
-------------------------------------------------------------------------------*/
-export default Footer;
+export default function Footer({ email = "hangsovoleak.dev@gmail.com" }: FooterProps) {
+  const { isDark } = useTheme();
+  const [copied, setCopied] = useState(false);
+  
+  // Form state
+  const [formState, setFormState] = useState({
+    name: "",
+    email: "",
+    topic: "Internship Opportunity",
+    message: ""
+  });
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(email);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const subject = encodeURIComponent(`[Portfolio Inquiry - ${formState.topic}] from ${formState.name}`);
+    const body = encodeURIComponent(
+      `Hello Hangsovoleak,\n\nName: ${formState.name}\nEmail: ${formState.email}\nTopic: ${formState.topic}\n\nMessage:\n${formState.message}`
+    );
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    setIsSubmitted(true);
+    setTimeout(() => setIsSubmitted(false), 5000);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    <footer
+      id="contact"
+      className={`relative border-t pt-24 pb-12 transition-colors duration-300 ${
+        isDark ? "border-slate-800/80 bg-[#0A0D14] text-slate-100" : "border-stone-300/80 bg-[#EFECE2] text-stone-900"
+      }`}
+    >
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        
+        {/* Contact Section Header */}
+        <div className="max-w-3xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
+            <Mail size={13} />
+            <span>08 / GET IN TOUCH</span>
+          </div>
+          <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl font-sans">
+            Let's build something <span className="text-emerald-500">exceptional</span>.
+          </h2>
+          <p className={`mt-3 text-sm sm:text-base leading-relaxed ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+            I am currently open to internships, junior software engineer roles, and client web projects. Feel free to reach out directly.
+          </p>
+        </div>
+
+        {/* 2-Column Contact & Form Card */}
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* Left Column: Direct Contact Info (5 cols) */}
+          <div className="lg:col-span-5 space-y-6">
+            
+            {/* Quick Email Copy Card */}
+            <div className={`rounded-2xl border p-6 transition ${
+              isDark ? "border-slate-800 bg-[#121622]" : "border-stone-300 bg-white shadow-xs"
+            }`}>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400">
+                Direct Email
+              </span>
+              <div className="mt-2 flex items-center justify-between gap-3">
+                <a
+                  href={`mailto:${email}`}
+                  className="truncate text-base sm:text-lg font-bold font-mono text-emerald-600 dark:text-emerald-400 hover:underline"
+                >
+                  {email}
+                </a>
+                <button
+                  onClick={handleCopyEmail}
+                  className={`flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-mono font-semibold transition ${
+                    copied
+                      ? "border-emerald-500 bg-emerald-500/10 text-emerald-500"
+                      : isDark
+                      ? "border-slate-700 bg-slate-900 text-slate-300 hover:text-white"
+                      : "border-stone-300 bg-stone-100 text-stone-700 hover:text-black"
+                  }`}
+                  title="Copy email to clipboard"
+                >
+                  {copied ? <Check size={13} /> : <Copy size={13} />}
+                  <span>{copied ? "Copied!" : "Copy"}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Phone & Location Info */}
+            <div className={`rounded-2xl border p-6 space-y-4 ${
+              isDark ? "border-slate-800 bg-[#121622]" : "border-stone-300 bg-white shadow-xs"
+            }`}>
+              <div className="flex items-start gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shrink-0">
+                  <MapPin size={16} />
+                </div>
+                <div>
+                  <div className="text-xs font-mono font-bold text-slate-400">Location</div>
+                  <div className="mt-0.5 text-sm font-semibold">Phnom Penh, Cambodia</div>
+                  <div className="text-xs text-slate-500">Royal University of Phnom Penh (RUPP)</div>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 pt-3 border-t border-slate-200 dark:border-slate-800/80">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-500 border border-blue-500/20 shrink-0">
+                  <Phone size={16} />
+                </div>
+                <div>
+                  <div className="text-xs font-mono font-bold text-slate-400">Telephone / Telegram</div>
+                  <div className="mt-0.5 text-sm font-semibold">+855 (0) 96 450 1234</div>
+                  <div className="text-xs text-slate-500">+855 (0) 10 292 822</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Social Links */}
+            <div className="flex items-center gap-3">
+              <a
+                href="https://github.com/Hangsovoleak"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex flex-1 items-center justify-center gap-2 rounded-xl border py-3 text-xs font-bold transition hover:-translate-y-0.5 ${
+                  isDark
+                    ? "border-slate-800 bg-[#0D1424] text-slate-200 hover:border-slate-600 hover:text-white"
+                    : "border-slate-200 bg-white text-slate-800 hover:border-slate-400 shadow-xs"
+                }`}
+              >
+                <Github size={16} />
+                <span>GitHub</span>
+              </a>
+
+              <a
+                href="https://linkedin.com/in/hangsovoleak"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex flex-1 items-center justify-center gap-2 rounded-xl border py-3 text-xs font-bold transition hover:-translate-y-0.5 ${
+                  isDark
+                    ? "border-slate-800 bg-[#0D1424] text-slate-200 hover:border-slate-600 hover:text-white"
+                    : "border-slate-200 bg-white text-slate-800 hover:border-slate-400 shadow-xs"
+                }`}
+              >
+                <Linkedin size={16} />
+                <span>LinkedIn</span>
+              </a>
+            </div>
+
+          </div>
+
+          {/* Right Column: Interactive Quick Inquiry Form (7 cols) */}
+          <div className="lg:col-span-7">
+            <form
+              onSubmit={handleFormSubmit}
+              className={`rounded-2xl border p-6 sm:p-8 space-y-4 shadow-xl ${
+                isDark ? "border-slate-800 bg-[#121622]" : "border-stone-300 bg-white"
+              }`}
+            >
+              <div className="flex items-center justify-between border-b pb-4 border-slate-200 dark:border-slate-800/80">
+                <span className="text-sm font-bold font-sans">Send a Message</span>
+                <span className="text-xs font-mono text-emerald-500 font-semibold">Direct Dispatch</span>
+              </div>
+
+              {/* Topic Selector Chips */}
+              <div>
+                <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">
+                  Topic of Interest:
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {["Internship Opportunity", "Client Web Project", "Technical Mentorship", "General Say Hello"].map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => setFormState({ ...formState, topic: t })}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                        formState.topic === t
+                          ? "bg-emerald-600 text-white shadow-xs font-bold"
+                          : isDark
+                          ? "bg-slate-900 text-slate-400 border border-slate-800 hover:text-white"
+                          : "bg-slate-100 text-slate-600 border border-slate-200 hover:text-black"
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Name & Email Row */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. John Doe"
+                    value={formState.name}
+                    onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                    className={`w-full rounded-xl border p-3 text-xs font-medium focus:border-emerald-500 focus:outline-none transition ${
+                      isDark
+                        ? "border-slate-800 bg-slate-900/90 text-slate-100 placeholder-slate-500"
+                        : "border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400"
+                    }`}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                    Your Email
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="e.g. john@example.com"
+                    value={formState.email}
+                    onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                    className={`w-full rounded-xl border p-3 text-xs font-medium focus:border-emerald-500 focus:outline-none transition ${
+                      isDark
+                        ? "border-slate-800 bg-slate-900/90 text-slate-100 placeholder-slate-500"
+                        : "border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400"
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {/* Message */}
+              <div>
+                <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Your Message
+                </label>
+                <textarea
+                  rows={4}
+                  required
+                  placeholder="Tell me about your project, team, or opportunity..."
+                  value={formState.message}
+                  onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                  className={`w-full rounded-xl border p-3 text-xs font-medium focus:border-emerald-500 focus:outline-none transition ${
+                    isDark
+                      ? "border-slate-800 bg-slate-900/90 text-slate-100 placeholder-slate-500"
+                      : "border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400"
+                  }`}
+                />
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3.5 text-xs font-bold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-500"
+              >
+                <Send size={14} />
+                <span>Send Message Directly</span>
+              </button>
+
+              {isSubmitted && (
+                <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 font-mono text-xs text-center">
+                  Draft prepared in your email client. Thank you for reaching out!
+                </div>
+              )}
+            </form>
+          </div>
+
+        </div>
+
+        {/* Bottom Bar: Copyright & Back to Top */}
+        <div className="mt-20 pt-8 border-t border-slate-200 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500">
+          <div>
+            © {new Date().getFullYear()} Rorn Hangsovoleak. Crafted with React 19, TypeScript & Tailwind CSS.
+          </div>
+
+          <button
+            onClick={scrollToTop}
+            className="flex items-center gap-1.5 text-slate-400 hover:text-emerald-500 transition font-bold"
+          >
+            <span>Back to top</span>
+            <ArrowUp size={13} />
+          </button>
+        </div>
+
+      </div>
+    </footer>
+  );
+}

@@ -1,134 +1,175 @@
-/**
- * Description:
- *      Header navigation component.
- *      Displays primary navigation links (ABOUT ME, MY JOURNEY, EXPERIENCE, PROJECT, LEARNING RESOURCE, TOOLS, SKILLS, CONTACTS) and utility controls.
- */
-
-/*------------------------------------------------------------------------------
-                                   IMPORTS
-------------------------------------------------------------------------------*/
-import { useState } from "react";
-import { Sun, Moon, Menu, X } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Sun, Moon, Menu, X, Command, ArrowRight } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 
-/*------------------------------------------------------------------------------
-                            MAIN COMPONENT DEFINITION
-------------------------------------------------------------------------------*/
-
-function Header({ links = [] }) {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [lang, setLang] = useState("EN");
-    const { toggleTheme, isDark } = useTheme();
-
-    const toggleLang = () => {
-        setLang((prev) => (prev === "EN" ? "KH" : "EN"));
-    };
-
-    return (
-        <header className={`fixed left-0 right-0 top-0 z-50 border-b backdrop-blur-md transition-colors duration-300 ${
-            isDark
-                ? "border-slate-800/80 bg-[#080C16]/90"
-                : "border-[#98989f]/20 bg-white/95"
-        }`}>
-            <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-
-                {/* Left / Navigation Links (Desktop View) */}
-                <nav className="hidden items-center gap-1 lg:flex">
-                    {links.map((link) => (
-                        <a
-                            key={link.id}
-                            href={link.href || `#${link.id}`}
-                            className={`rounded-lg px-3 py-2 text-[12px] font-bold uppercase tracking-wider transition ${
-                                isDark
-                                    ? "text-slate-300 hover:bg-[#0D9668]/10 hover:text-[#0D9668]"
-                                    : "text-[#09090B]/85 hover:bg-[#0D9668]/10 hover:text-[#0D9668]"
-                            }`}
-                        >
-                            {link.title || link.label}
-                        </a>
-                    ))}
-                </nav>
-
-                {/* Mobile Menu Button when screen is small */}
-                <div className="flex items-center gap-2 lg:hidden">
-                    <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? "text-[#0D9668]" : "text-[#0D9668]"}`}>
-                        Menu
-                    </span>
-                </div>
-
-                {/* Right Side: Utility Controls (Language Toggle + Theme Icon + Mobile Toggle) */}
-                <div className="flex items-center gap-3">
-                    {/* Language Indicator */}
-                    <button
-                        onClick={toggleLang}
-                        className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-bold uppercase transition ${
-                            isDark
-                                ? "border-slate-700/60 bg-slate-900/80 text-slate-200 hover:bg-slate-800"
-                                : "border-[#98989f]/30 bg-slate-50 text-[#09090B] hover:bg-slate-100"
-                        }`}
-                        title="Toggle Language"
-                    >
-                        <span className="text-sm">{lang === "EN" ? "🇬🇧" : "🇰🇭"}</span>
-                        <span>{lang}</span>
-                    </button>
-
-                    {/* Light/Dark Mode Toggle Button */}
-                    <button
-                        onClick={toggleTheme}
-                        className={`grid h-8 w-8 place-items-center rounded-full border transition-transform duration-300 hover:scale-110 ${
-                            isDark
-                                ? "border-slate-700/60 bg-slate-900/80 text-[#0D9668] hover:bg-slate-800"
-                                : "border-[#98989f]/30 bg-slate-50 text-[#2C3F96] hover:bg-slate-100"
-                        }`}
-                        aria-label="Toggle theme"
-                        title={`Switch to ${isDark ? "Light" : "Dark"} Mode`}
-                    >
-                        {isDark ? <Sun size={16} className="text-[#0D9668]" /> : <Moon size={16} className="text-[#2C3F96]" />}
-                    </button>
-
-                    {/* Mobile Hamburger Toggle */}
-                    <button
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className={`grid h-9 w-9 place-items-center rounded-lg border lg:hidden ${
-                            isDark
-                                ? "border-slate-700/60 bg-slate-900/80 text-slate-200"
-                                : "border-[#98989f]/30 text-[#09090B]"
-                        }`}
-                        aria-label="Toggle menu"
-                    >
-                        {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
-                    </button>
-                </div>
-            </div>
-
-            {/* Mobile Navigation Drawer */}
-            {isMenuOpen && (
-                <div className={`border-b px-6 pb-6 pt-2 shadow-xl lg:hidden ${
-                    isDark ? "border-slate-800 bg-[#080C16]" : "border-[#98989f]/20 bg-white"
-                }`}>
-                    <nav className="flex flex-col gap-2">
-                        {links.map((link) => (
-                            <a
-                                key={link.id}
-                                href={link.href || `#${link.id}`}
-                                onClick={() => setIsMenuOpen(false)}
-                                className={`rounded-lg px-3 py-2.5 text-xs font-bold uppercase tracking-wider ${
-                                    isDark
-                                        ? "text-slate-200 hover:bg-[#0D9668]/10 hover:text-[#0D9668]"
-                                        : "text-[#09090B] hover:bg-[#0D9668]/10 hover:text-[#0D9668]"
-                                }`}
-                            >
-                                {link.title || link.label}
-                            </a>
-                        ))}
-                    </nav>
-                </div>
-            )}
-        </header>
-    );
+interface NavbarProps {
+  onOpenCommandPalette?: () => void;
 }
 
-/*------------------------------------------------------------------------------
-                                   EXPORTS
-------------------------------------------------------------------------------*/
-export default Header;
+const NAV_LINKS = [
+  { id: "about", label: "About" },
+  { id: "projects", label: "Projects", badge: "8" },
+  { id: "experience", label: "Experience" },
+  { id: "education", label: "Education" },
+  { id: "tools", label: "Stack" },
+  { id: "skills", label: "Code" },
+  { id: "contact", label: "Contact" },
+];
+
+export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
+  const { isDark, toggleTheme } = useTheme();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <header
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        isScrolled
+          ? isDark
+            ? "bg-[#0D1015]/85 border-b border-slate-800/80 backdrop-blur-md shadow-lg shadow-black/20"
+            : "bg-[#F6F3EA]/90 border-b border-stone-300/70 backdrop-blur-md shadow-xs"
+          : "bg-transparent border-b border-transparent"
+      }`}
+    >
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        
+        {/* Brand / Logo */}
+        <a href="#about" className="flex items-center gap-3 group">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 border border-slate-700/80 text-white font-mono font-black text-sm group-hover:border-emerald-500 transition-colors">
+            HS
+          </div>
+          <div className="flex flex-col">
+            <span className="font-sans font-bold text-sm text-slate-900 dark:text-white leading-tight">
+              Rorn Hangsovoleak
+            </span>
+            <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Software Engineer
+            </span>
+          </div>
+        </a>
+
+        {/* Desktop Navigation Links */}
+        <nav className="hidden lg:flex items-center gap-1">
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.id}
+              href={`#${link.id}`}
+              className={`relative px-3 py-1.5 text-xs font-semibold rounded-lg transition ${
+                isDark
+                  ? "text-slate-300 hover:text-white hover:bg-slate-800/60"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              }`}
+            >
+              <span>{link.label}</span>
+              {link.badge && (
+                <span className="ml-1.5 rounded-full bg-emerald-500/10 px-1.5 py-0.2 font-mono text-[9px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                  {link.badge}
+                </span>
+              )}
+            </a>
+          ))}
+        </nav>
+
+        {/* Right Actions: Command Palette, Theme, Contact */}
+        <div className="flex items-center gap-2.5">
+          
+          {/* Quick Command Palette Button */}
+          {onOpenCommandPalette && (
+            <button
+              onClick={onOpenCommandPalette}
+              className={`hidden sm:flex items-center gap-2 rounded-xl border px-3 py-1.5 text-xs font-mono transition ${
+                isDark
+                  ? "border-slate-800 bg-[#0D1424] text-slate-400 hover:text-white hover:border-slate-700"
+                  : "border-slate-200 bg-slate-100 text-slate-600 hover:text-slate-900 hover:border-slate-300"
+              }`}
+              title="Command Palette (Cmd+K)"
+            >
+              <Command size={13} className="text-emerald-500" />
+              <span>Cmd+K</span>
+            </button>
+          )}
+
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className={`flex h-9 w-9 items-center justify-center rounded-xl border transition-all duration-200 hover:scale-105 ${
+              isDark
+                ? "border-slate-800 bg-[#0D1424] text-amber-400 hover:border-slate-700"
+                : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 shadow-xs"
+            }`}
+            aria-label="Toggle dark/light theme"
+          >
+            {isDark ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+
+          {/* Contact CTA (Desktop) */}
+          <a
+            href="#contact"
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-sm shadow-emerald-600/20 transition hover:bg-emerald-500"
+          >
+            <span>Let's Talk</span>
+            <ArrowRight size={13} />
+          </a>
+
+          {/* Mobile Hamburger Toggle */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className={`flex h-9 w-9 items-center justify-center rounded-xl border lg:hidden transition ${
+              isDark
+                ? "border-slate-800 bg-[#0D1424] text-slate-300"
+                : "border-slate-200 bg-white text-slate-700"
+            }`}
+            aria-label="Toggle mobile menu"
+          >
+            {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
+
+      </div>
+
+      {/* Mobile Drawer Menu */}
+      {isMobileMenuOpen && (
+        <div className={`lg:hidden border-b px-6 py-6 transition-all ${
+          isDark ? "border-slate-800 bg-[#0D1015] text-white" : "border-stone-300/80 bg-[#F6F3EA] text-stone-900"
+        }`}>
+          <div className="flex flex-col space-y-3">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.id}
+                href={`#${link.id}`}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center justify-between py-2 text-sm font-semibold border-b border-slate-200/50 dark:border-slate-800/50"
+              >
+                <span>{link.label}</span>
+                {link.badge && (
+                  <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 font-mono text-xs font-bold text-emerald-500">
+                    {link.badge}
+                  </span>
+                )}
+              </a>
+            ))}
+
+            <div className="pt-4 flex flex-col gap-3">
+              <a
+                href="#contact"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full text-center rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white shadow-md shadow-emerald-600/25"
+              >
+                Get In Touch
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}

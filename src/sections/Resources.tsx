@@ -1,269 +1,178 @@
-/**
- * Description:
- *      Learning & Capabilities section showcasing mastered skills and coursework.
- *      Styled precisely after the Platform Capabilities reference layout:
- *      - Header with green dash line ("— LEARNING CAPABILITIES") and right sub-description.
- *      - 2 rows of horizontal moving cards with infinite marquee motion:
- *        - Row 1: Moves continuously to the RIGHT.
- *        - Row 2: Moves continuously to the LEFT.
- *      - Hover-to-pause interaction and click capability links.
- *      - Bottom text caption: "Hover to pause - click any capability to explore details".
- */
-
-/*------------------------------------------------------------------------------
-                                   IMPORTS
-------------------------------------------------------------------------------*/
+import React from "react";
 import {
-    Code2,
-    ShieldCheck,
-    Cloud,
-    Database,
-    Cpu,
-    Blocks,
-    CircuitBoard,
-    Binary,
-    Atom,
-    BarChart3,
-    Terminal,
-    Palette,
-    Boxes,
-    Kanban,
-    Briefcase,
-    ArrowUpRight
+  Code2,
+  ShieldCheck,
+  Database,
+  Cloud,
+  Palette,
+  Cpu,
+  Layers,
+  Sparkles
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 
-/*------------------------------------------------------------------------------
-                                 LEARNING DATA
-------------------------------------------------------------------------------*/
-// Row 1 items (Moves Right)
-const ROW_1_TOPICS = [
-    {
-        id: "dsa",
-        title: "Data Structure & Algorithm",
-        category: "COMPUTATIONAL LOGIC",
-        tag: "CORE",
-        description: "Arrays, linked lists, trees, graphs, sorting algorithms, big-O time complexity, and memory optimization.",
-        icon: Code2,
-        isGreen: false,
-        code: "DSA"
-    },
-    {
-        id: "win-sec",
-        title: "Windows Security",
-        category: "SYSTEM DEFENSE",
-        tag: "SECURITY",
-        description: "Windows OS installation, bootable USB creation, user access controls, firewall policies, and system repair.",
-        icon: ShieldCheck,
-        isGreen: true,
-        code: "SEC"
-    },
-    {
-        id: "devops",
-        title: "DevOps",
-        category: "CI/CD & DEPLOYMENT",
-        tag: "DEVOPS",
-        description: "Git version control, GitHub workflows, continuous integration, environment isolation, and automated deployment.",
-        icon: Cloud,
-        isGreen: false,
-        code: "OPS"
-    },
-    {
-        id: "db",
-        title: "Database",
-        category: "RELATIONAL DATA",
-        tag: "SQL & DATA",
-        description: "PostgreSQL, MySQL schema architecture, ER diagrams, complex SQL queries, indexing, and data integrity.",
-        icon: Database,
-        isGreen: true,
-        code: "RDBMS"
-    },
-    {
-        id: "iot",
-        title: "IoTs",
-        category: "EMBEDDED HARDWARE",
-        tag: "HARDWARE",
-        description: "Sensor integration, microcontroller hardware logic, micro-processing, and physical computing protocols.",
-        icon: Cpu,
-        isGreen: false,
-        code: "IOT"
-    },
-    {
-        id: "scratch",
-        title: "Scratch",
-        category: "VISUAL PROGRAMMING",
-        tag: "EDTECH",
-        description: "Block-based programming, logic animation games, slide curriculum adaptation, and student mentoring.",
-        icon: Blocks,
-        isGreen: true,
-        code: "SCRATCH"
-    },
-    {
-        id: "microbit",
-        title: "Microbit",
-        category: "PHYSICAL COMPUTING",
-        tag: "HARDWARE",
-        description: "BBC Micro:bit LED matrix programming, sensor input loops, and STEM hands-on laboratory experiments.",
-        icon: CircuitBoard,
-        isGreen: false,
-        code: "MICROBIT"
-    },
-    {
-        id: "math",
-        title: "Mathematics (Linear, Matrix)",
-        category: "FOUNDATIONAL MATH",
-        tag: "MATH",
-        description: "Linear algebra, matrix transformation, vector calculations, system equations, and mathematical modeling.",
-        icon: Binary,
-        isGreen: true,
-        code: "MATH"
-    }
+const CAPABILITIES = [
+  {
+    id: "dsa",
+    icon: Code2,
+    code: "DSA",
+    title: "Algorithms & Computational Logic",
+    category: "FOUNDATIONS",
+    description: "Graph theory, Dijkstra shortest path finding, binary trees, asymptotic analysis (Big-O), stacks, and queues implemented in Python and C++.",
+    highlights: ["Dijkstra Shortest Path", "Graph Adjacency Lists", "Big-O Time Complexity"]
+  },
+  {
+    id: "web",
+    icon: Layers,
+    code: "WEB",
+    title: "Full-Stack Web Architecture",
+    category: "APPLICATION DEV",
+    description: "Component-driven frontend engineering with React & TypeScript paired with Python/Django backend services, RESTful endpoints, and JSON serialization.",
+    highlights: ["React & TypeScript SPAs", "Django REST APIs", "Client-Server State Sync"]
+  },
+  {
+    id: "db",
+    icon: Database,
+    code: "RDBMS",
+    title: "Relational Database Design",
+    category: "DATA PERSISTENCE",
+    description: "Schema architecture in PostgreSQL, MySQL, and SQLite. Crafting normalized tables, foreign key constraints, indexing, and transactional integrity.",
+    highlights: ["PostgreSQL & MySQL", "Normalized Schema Design", "Django ORM Queries"]
+  },
+  {
+    id: "sec",
+    icon: ShieldCheck,
+    code: "SYS",
+    title: "IT Support & System Defense",
+    category: "SYSTEM INFRASTRUCTURE",
+    description: "Hands-on workstation diagnostics, clean Windows OS installations, bootable recovery media generation, BIOS/UEFI resolution, and access control.",
+    highlights: ["Hardware Troubleshooting", "Bootable USB Imaging", "OS Crash Diagnostics"]
+  },
+  {
+    id: "uiux",
+    icon: Palette,
+    code: "DESIGN",
+    title: "UI/UX Prototyping & Design Systems",
+    category: "HUMAN-COMPUTER INTERACTION",
+    description: "Crafting client-approved wireframes, design tokens, and responsive UI components in Figma before transforming them into pixel-perfect Tailwind CSS code.",
+    highlights: ["Figma Design Systems", "Responsive Mobile-First", "High Contrast & Accessibility"]
+  },
+  {
+    id: "ops",
+    icon: Cloud,
+    code: "DEVOPS",
+    title: "Version Control & Deployment",
+    category: "ENGINEERING WORKFLOW",
+    description: "Git branching strategies, collaborative GitHub pull requests, continuous deployment on Vercel, and environment variable configuration.",
+    highlights: ["Git & GitHub Workflows", "Vercel Continuous Deploy", "Clean Project Management"]
+  }
 ];
 
-// Row 2 items (Moves Left)
-const ROW_2_TOPICS = [
-    {
-        id: "physics",
-        title: "Physics",
-        category: "APPLIED SCIENCE",
-        tag: "SCIENCE",
-        description: "Mechanics, electric circuits, electromagnetic principles, and physical laws applied to computing hardware.",
-        icon: Atom,
-        isGreen: false,
-        code: "PHYS"
-    },
-    {
-        id: "powerbi",
-        title: "PowerBI",
-        category: "BUSINESS INTELLIGENCE",
-        tag: "ANALYTICS",
-        description: "Data visualization dashboards, DAX queries, metric KPIs, data transformation, and executive reporting.",
-        icon: BarChart3,
-        isGreen: true,
-        code: "BI"
-    },
-    {
-        id: "prog-lang",
-        title: "Programming Language",
-        category: "SOFTWARE SYNTAX",
-        tag: "LANGUAGES",
-        description: "Object-oriented JavaScript, TypeScript, Java, HTML5, CSS3, and modern framework syntax mastery.",
-        icon: Terminal,
-        isGreen: false,
-        code: "LANG"
-    },
-    {
-        id: "design",
-        title: "Design",
-        category: "UI / UX DESIGN",
-        tag: "FIGMA",
-        description: "Figma vector prototyping, responsive layouts, color theory, component design systems, and client reviews.",
-        icon: Palette,
-        isGreen: true,
-        code: "UI/UX"
-    },
-    {
-        id: "ooad",
-        title: "Object Oriented & Analysis",
-        category: "SOFTWARE ARCHITECTURE",
-        tag: "OOAD",
-        description: "Encapsulation, inheritance, polymorphism, design patterns, UML class diagrams, and modular system design.",
-        icon: Boxes,
-        isGreen: false,
-        code: "OOAD"
-    },
-    {
-        id: "pm",
-        title: "Software Project Management",
-        category: "AGILE METHODOLOGY",
-        tag: "AGILE",
-        description: "Agile sprint cycles, requirements gathering, client milestone reviews, scope control, and deliverable tracking.",
-        icon: Kanban,
-        isGreen: true,
-        code: "SPM"
-    },
-    {
-        id: "prof-life",
-        title: "Professional Life",
-        category: "CAREER & ETHICS",
-        tag: "ETHICS",
-        description: "Cross-functional communication, team collaboration, continuous learning, problem solving, and workplace ethics.",
-        icon: Briefcase,
-        isGreen: false,
-        code: "PRO"
-    }
-];
+export default function ResourcesSection() {
+  const { isDark } = useTheme();
 
-/*------------------------------------------------------------------------------
-                            SINGLE CAPABILITY CARD
-------------------------------------------------------------------------------*/
-function CapabilityCard({ item }: { item: typeof ROW_1_TOPICS[0] }) {
-    const { isDark } = useTheme();
-    const IconComponent = item.icon;
-
-    return (
-        <article className={`group relative flex h-[220px] w-72 sm:w-80 shrink-0 flex-col justify-between overflow-hidden rounded-3xl border p-5 sm:p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#0D9668]/60 hover:shadow-xl ${
-            isDark
-                ? "border-slate-800/80 bg-[#0D1424] hover:bg-[#111A2E]"
-                : "border-slate-200 bg-white hover:bg-slate-50"
-        }`}>
-            {/* Background Watermark Code */}
-            <span className={`absolute top-2 right-4 text-5xl font-black tracking-tighter select-none pointer-events-none transition-colors ${
-                isDark ? "text-slate-800/40 group-hover:text-emerald-950/50" : "text-slate-200 group-hover:text-emerald-100"
-            }`}>
-                {item.code}
-            </span>
-
-            {/* Top Bar: Icon Badge & Pill Tag */}
-            <div className="relative z-10 flex items-center justify-between">
-                <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-2xl border shadow-xs transition-transform group-hover:scale-105 ${
-                        item.isGreen
-                            ? "border-[#0D9668]/30 bg-[#0D9668]/10 text-[#0D9668]"
-                            : "border-[#2C3F96]/30 bg-[#2C3F96]/10 text-[#2C3F96]"
-                    }`}
-                >
-                    <IconComponent size={20} />
-                </div>
-
-                <span
-                    className={`rounded-full px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest ${
-                        item.isGreen
-                            ? "border border-[#0D9668]/30 bg-[#0D9668]/10 text-[#0D9668]"
-                            : "border border-[#2C3F96]/30 bg-[#2C3F96]/10 text-[#2C3F96]"
-                    }`}
-                >
-                    {item.tag}
-                </span>
+  return (
+    <section
+      id="resources"
+      className={`relative border-b py-24 transition-colors duration-300 ${
+        isDark ? "border-slate-800/80 bg-[#0D1015]" : "border-stone-300/70 bg-[#F2EFE6]"
+      }`}
+    >
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-stone-300/60 dark:border-slate-800/80">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
+              <Cpu size={13} />
+              <span>06 / CORE CAPABILITIES</span>
             </div>
+            <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl font-sans">
+              Engineering <span className="text-emerald-500">Disciplines</span>
+            </h2>
+            <p className={`mt-2 max-w-2xl text-sm sm:text-base leading-relaxed ${isDark ? "text-slate-400" : "text-stone-600"}`}>
+              Core computational strengths, software architecture principles, and engineering practices developed through academic studies and field experience.
+            </p>
+          </div>
 
-            {/* Middle Content */}
-            <div className="relative z-10 my-2">
-                <div className={`text-[10px] font-extrabold uppercase tracking-widest ${isDark ? "text-slate-400" : "text-slate-500"}`}>
-                    {item.category}
-                </div>
-                <h3 className={`mt-1 text-base sm:text-lg font-black tracking-tight group-hover:text-[#0D9668] transition-colors line-clamp-1 ${
-                    isDark ? "text-white" : "text-slate-900"
-                }`}>
-                    {item.title}
-                </h3>
-                <p className={`mt-1 text-xs font-medium leading-5 line-clamp-2 ${
+          <div className={`hidden sm:flex items-center gap-2 rounded-2xl border px-4 py-2.5 text-xs font-mono ${
+            isDark ? "border-slate-800 bg-[#121622] text-slate-300" : "border-stone-300 bg-white text-stone-700 shadow-xs"
+          }`}>
+            <Sparkles size={14} className="text-emerald-500" />
+            <span>6 Core Pillars</span>
+          </div>
+        </div>
+
+        {/* 6 Capabilities Grid */}
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {CAPABILITIES.map((cap) => {
+            const Icon = cap.icon;
+
+            return (
+              <div
+                key={cap.id}
+                className={`group relative flex flex-col justify-between rounded-2xl border p-6 sm:p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+                  isDark
+                    ? "border-slate-800/80 bg-[#121622] hover:border-emerald-500/50"
+                    : "border-stone-300/80 bg-white hover:border-emerald-500/50 shadow-xs"
+                }`}
+              >
+                <div>
+                  {/* Top Bar with Icon & Code */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 group-hover:scale-110 transition-transform">
+                      <Icon size={20} />
+                    </div>
+                    <span className="font-mono text-xs font-bold text-slate-400 border border-slate-700/40 rounded-md px-2 py-0.5">
+                      {cap.code}
+                    </span>
+                  </div>
+
+                  {/* Title & Category */}
+                  <div className="mt-4">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                      {cap.category}
+                    </span>
+                    <h3 className="mt-1 text-lg font-bold font-sans tracking-tight text-slate-900 dark:text-white group-hover:text-emerald-500 transition-colors">
+                      {cap.title}
+                    </h3>
+                  </div>
+
+                  {/* Description */}
+                  <p className={`mt-2.5 text-xs sm:text-sm leading-relaxed ${
                     isDark ? "text-slate-400" : "text-slate-600"
-                }`}>
-                    {item.description}
-                </p>
-            </div>
+                  }`}>
+                    {cap.description}
+                  </p>
+                </div>
 
-            {/* Card Footer Action */}
-            <div className={`relative z-10 flex items-center justify-between border-t pt-3 text-[11px] font-extrabold uppercase tracking-wider group-hover:text-[#0D9668] transition-colors ${
-                isDark ? "border-slate-800/80 text-slate-500" : "border-slate-200 text-slate-500"
-            }`}>
-                <span>LEARN MORE</span>
-                <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </div>
-        </article>
-    );
+                {/* Highlights tags */}
+                <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800/60">
+                  <div className="flex flex-wrap gap-1.5">
+                    {cap.highlights.map((h) => (
+                      <span
+                        key={h}
+                        className={`rounded-md px-2 py-0.5 text-[10px] font-mono font-medium ${
+                          isDark
+                            ? "bg-slate-900 text-slate-300 border border-slate-800"
+                            : "bg-slate-100 text-slate-700 border border-slate-200"
+                        }`}
+                      >
+                        {h}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+      </div>
+    </section>
+  );
 }
+<<<<<<< HEAD
 
 /*------------------------------------------------------------------------------
                             MAIN COMPONENT DEFINITION
@@ -332,3 +241,5 @@ function ResourcesSection() {
                                    EXPORTS
 ------------------------------------------------------------------------------*/
 export default ResourcesSection;
+=======
+>>>>>>> f13f9d9 (update features)
