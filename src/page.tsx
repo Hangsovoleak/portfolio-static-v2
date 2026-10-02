@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import AboutSection from "./sections/About";
-import ProjectsSection from "./sections/Projects";
-import ExperienceSection from "./sections/Experience";
-import EducationSection from "./sections/Education";
-import ToolsSection from "./sections/Tools";
-import ResourcesSection from "./sections/Resources";
-import SkillsSection from "./sections/Skills";
+import GitHubNavbar from "./components/GitHubNavbar";
+import GitHubSubnav from "./components/GitHubSubnav";
+import GitHubSidebar from "./components/GitHubSidebar";
+import GitHubReadmeCard from "./components/GitHubReadmeCard";
+import GitHubContributions from "./components/GitHubContributions";
+import GitHubPinnedRepos from "./components/GitHubPinnedRepos";
+import GitHubSkillSet from "./components/GitHubSkillSet";
+import GitHubActivityTimeline from "./components/GitHubActivityTimeline";
+import GitHubFooter from "./components/GitHubFooter";
+import ProjectModal from "./components/ProjectModal";
+import CertificateModal from "./components/CertificateModal";
 import CommandPalette from "./components/CommandPalette";
 
 import { fetchPortfolioData } from "./services/portfolioService";
 import { ThemeProvider, useTheme } from "./context/ThemeContext";
+import { useVisitorCount } from "./hooks/useVisitorCount";
+import type { Project } from "./data/projects";
 
 function PortfolioContent() {
   const { isDark } = useTheme();
+  const { visitorCount } = useVisitorCount();
 
   // Data states
   const [profile, setProfile] = useState<any>(null);
@@ -23,8 +28,13 @@ function PortfolioContent() {
   const [projects, setProjects] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Command palette state
+  // Active navigation tab
+  const [activeTab, setActiveTab] = useState("overview");
+
+  // Modals state
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
 
   useEffect(() => {
     async function loadPortfolio() {
@@ -44,12 +54,15 @@ function PortfolioContent() {
     loadPortfolio();
   }, []);
 
-  // Keyboard shortcut for Cmd+K / Ctrl+K
+  // Keyboard shortcut for Cmd+K / Ctrl+K and '/'
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         setIsCommandPaletteOpen((prev) => !prev);
+      } else if (e.key === "/" && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) {
+        e.preventDefault();
+        setIsCommandPaletteOpen(true);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -59,12 +72,12 @@ function PortfolioContent() {
   if (isLoading) {
     return (
       <div className={`grid min-h-screen place-items-center font-mono text-xs ${
-        isDark ? "bg-[#080C16] text-white" : "bg-white text-slate-900"
+        isDark ? "bg-[#0d1117] text-[#c9d1d9]" : "bg-[#ffffff] text-[#1f2328]"
       }`}>
         <div className="flex flex-col items-center gap-3">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
-          <span className="font-bold tracking-widest uppercase text-emerald-500">
-            Initializing Portfolio Environment...
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#1f883d] dark:border-[#3fb950] border-t-transparent" />
+          <span className="font-bold tracking-widest uppercase text-[#1f883d] dark:text-[#3fb950]">
+            Initializing GitHub Portfolio Environment...
           </span>
         </div>
       </div>
@@ -72,27 +85,89 @@ function PortfolioContent() {
   }
 
   return (
-    <div className={`min-h-screen text-left transition-colors duration-300 font-sans ${
-      isDark ? "bg-[#0D1015] text-slate-100" : "bg-[#F6F3EA] text-stone-900"
+    <div className={`min-h-screen text-left transition-colors duration-200 font-sans ${
+      isDark ? "bg-[#0d1117] text-[#c9d1d9]" : "bg-[#ffffff] text-[#1f2328]"
     }`}>
-      {/* Top Navbar */}
-      <Navbar onOpenCommandPalette={() => setIsCommandPaletteOpen(true)} />
+      {/* Top GitHub Navbar */}
+      <GitHubNavbar
+        onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        visitorCount={visitorCount}
+      />
 
-      {/* Main Content Sections */}
-      <main>
-        <AboutSection profile={profile} />
-        <ProjectsSection projects={projects} />
-        <ExperienceSection items={experience} />
-        <EducationSection items={education} />
-        <ToolsSection />
-        <ResourcesSection />
-        <SkillsSection />
+      {/* GitHub Profile Sticky Subnav Tabs */}
+      <GitHubSubnav
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        reposCount={projects.length || 8}
+        projectsCount={6}
+        expCount={experience.length || 3}
+        eduCount={education.length || 2}
+        skillsCount={22}
+      />
+
+      {/* Main Two-Column GitHub Layout */}
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 pt-6 sm:pt-8 pb-16">
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
+          {/* Left Column: Authentic GitHub Profile Sidebar */}
+          <GitHubSidebar
+            profile={profile}
+            visitorCount={visitorCount}
+            onOpenContact={() => {
+              const el = document.getElementById("contact");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
+          />
+
+          {/* Right Column: GitHub Profile Content */}
+          <div className="flex-1 w-full min-w-0 space-y-8">
+            {/* 1. GitHub README.md Card (Matching Image 1) */}
+            <div id="overview">
+              <GitHubReadmeCard profile={profile} visitorCount={visitorCount} />
+            </div>
+
+            {/* 2. GitHub Contribution Heatmap & 3D Radar (Matching Image 2 & Image 1) */}
+            <GitHubContributions />
+
+            {/* 3. Pinned Repositories Grid */}
+            <GitHubPinnedRepos
+              onSelectProject={(project) => setSelectedProject(project)}
+            />
+
+            {/* 4. Skill Set Matrix (Matching Image 1) */}
+            <GitHubSkillSet />
+
+            {/* 5. Career & Contribution Activity (Experience & Education) */}
+            <GitHubActivityTimeline
+              onOpenCertificate={() => setIsCertModalOpen(true)}
+            />
+          </div>
+        </div>
       </main>
 
-      {/* Footer / Contact */}
-      <Footer email={profile?.email || "hangsovoleak.dev@gmail.com"} />
+      {/* Authentic GitHub Footer */}
+      <div id="contact">
+        <GitHubFooter visitorCount={visitorCount} />
+      </div>
 
-      {/* Command Palette Modal */}
+      {/* Project Details Modal */}
+      {selectedProject && (
+        <ProjectModal
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+          isDark={isDark}
+        />
+      )}
+
+      {/* Certificate Viewer Modal */}
+      <CertificateModal
+        isOpen={isCertModalOpen}
+        onClose={() => setIsCertModalOpen(false)}
+        imageUrl="/assets/certificate.png"
+      />
+
+      {/* Command Palette */}
       <CommandPalette
         isOpen={isCommandPaletteOpen}
         onClose={() => setIsCommandPaletteOpen(false)}

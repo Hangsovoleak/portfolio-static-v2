@@ -15,6 +15,8 @@ export interface Profile {
   bio: string;
   shortBio: string;
   image: string;
+  silverImage?: string;
+  colorImage?: string;
   collageImage?: string;
   emeraldCollageImage?: string;
   education: {
